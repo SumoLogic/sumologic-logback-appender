@@ -23,16 +23,29 @@ Follow these instructions for [setting up an HTTP Source](http://help.sumologic.
 ### Logback XML Configuration
 Be sure to replace [collector-url] with the URL after creating an HTTP Hosted Collector Source in Sumo Logic.
 
-`TODO.xml`:
+`logback.xml`:
 
 ```
-TODO
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="SumoAppender" class="com.sumologic.logback.SumoLogicAppender">
+        <encoder>
+            <Pattern>
+                %date{ISO8601} [%t] %-5p %c - %m%n
+            </Pattern>
+        </encoder>
+        <url>[collector-url]</url>
+    </appender>
+    <Logger name="SumoLogger" level="info">
+        <appender-ref ref="SumoAppender" />
+    </Logger>
+</configuration>
 ```
 
 ### Parameters
 | Parameter             | Required? | Default Value | Description                                                                                                                                |
 |-----------------------|----------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| name                  | Yes      |               | Name used to register Log4j Appender                                                                                                       |
+| encoder               | Yes      |               | Encoder to format the log message. This will usually specify a Pattern.                                                                                       |
 | url                   | Yes      |               | HTTP collection endpoint URL                                                                                                               |
 | sourceName            | No       | "Http Input"              | Source name to appear when searching on Sumo Logic by `_sourceName`                                                                                                        |
 | sourceHost            | No       | Client IP Address              | Source host to appear when searching on Sumo Logic by `_sourceHost`                                                                                                         |
@@ -50,13 +63,34 @@ TODO
 | maxFlushInterval      | No       | 10000         | Maximum interval (in ms) between flushes                                                                                                   |
 | flushingAccuracy      | No       | 250           | How often (in ms) that the flushing thread checks the message queue                                                                        |
 | maxQueueSizeBytes     | No       | 1000000       | Maximum capacity (in bytes) of the message queue
-| flushAllBeforeStopping| No       | false         | Flush all messages before stopping regardless of flushingAccuracy
+| flushAllBeforeStopping| No       | false         | Flush all messages before stopping regardless of flushingAccuracy Be sure to call `loggerContext.stop();` when your application stops.
 
 #### Example with Optional Parameters
-`TODO.xml`:
+
+`logback.xml`:
 
 ```
-TODO
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="SumoAppender" class="com.sumologic.logback.SumoLogicAppender">
+        <encoder>
+            <Pattern>
+                %date{ISO8601} [%t] %-5p %c - %m%n
+            </Pattern>
+        </encoder>
+        <url>[collector-url]</url>
+        <messagesPerRequest>10000</messagesPerRequest>
+        <maxFlushInterval>1000</maxFlushInterval>
+        <flushingAccuracy>100</flushingAccuracy>
+        <sourceName>mySource</sourceName>
+        <sourceHost>myHost</sourceHost>
+        <sourceCategory>myCategory</sourceCategory>
+        <flushAllBeforeStopping>true</flushAllBeforeStopping>
+    </appender>
+    <Logger name="SumoLogger" level="info">
+        <appender-ref ref="SumoAppender" />
+    </Logger>
+</configuration>
 ```
 
 ### TLS Support
