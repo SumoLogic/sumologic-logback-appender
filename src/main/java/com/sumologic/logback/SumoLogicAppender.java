@@ -40,6 +40,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * Logback Appender that sends log messages to Sumo Logic.
+ *
+ * @author Ryan Miller (rmiller@sumologic.com)
+ */
 public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -73,7 +78,8 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
     volatile private BufferWithEviction<String> queue;
     private static final String CLIENT_NAME = "logback-appender";
 
-    /* All the parameters */
+    // All the parameters
+
     public Encoder<E> getEncoder() {
         return this.encoder;
     }
@@ -217,56 +223,58 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
             ++errors;
         }
 
-        if (errors == 0) {
-            super.start();
-            logger.debug("Starting appender");
-            /* Initialize queue */
-            if (queue == null) {
-                queue = new BufferWithFifoEviction<String>(maxQueueSizeBytes, new CostBoundedConcurrentQueue.CostAssigner<String>() {
-                    @Override
-                    public long cost(String e) {
-                        // Note: This is only an estimate for total byte usage, since in UTF-8 encoding,
-                        // the size of one character may be > 1 byte.
-                        return e.length();
-                    }
-                });
-            } else {
-                queue.setCapacity(maxQueueSizeBytes);
-            }
-
-            /* Initialize sender */
-            if (sender == null)
-                sender = new SumoHttpSender();
-
-            sender.setRetryInterval(retryInterval);
-            sender.setConnectionTimeout(connectionTimeout);
-            sender.setSocketTimeout(socketTimeout);
-            sender.setUrl(url);
-            sender.setSourceHost(sourceHost);
-            sender.setSourceName(sourceName);
-            sender.setSourceCategory(sourceCategory);
-            sender.setProxySettings(new ProxySettings(
-                    proxyHost,
-                    proxyPort,
-                    proxyAuth,
-                    proxyUser,
-                    proxyPassword,
-                    proxyDomain));
-            sender.setClientHeaderValue(CLIENT_NAME);
-            sender.init();
-
-            /* Initialize flusher  */
-            if (flusher != null)
-                flusher.stop();
-
-            flusher = new SumoBufferFlusher(flushingAccuracy,
-                    messagesPerRequest,
-                    maxFlushInterval,
-                    sender,
-                    queue,
-                    flushAllBeforeStopping);
-            flusher.start();
+        if (errors > 0) {
+            return;
         }
+
+        super.start();
+        logger.debug("Starting appender");
+        /* Initialize queue */
+        if (queue == null) {
+            queue = new BufferWithFifoEviction<String>(maxQueueSizeBytes, new CostBoundedConcurrentQueue.CostAssigner<String>() {
+                @Override
+                public long cost(String e) {
+                    // Note: This is only an estimate for total byte usage, since in UTF-8 encoding,
+                    // the size of one character may be > 1 byte.
+                    return e.length();
+                }
+            });
+        } else {
+            queue.setCapacity(maxQueueSizeBytes);
+        }
+
+        /* Initialize sender */
+        if (sender == null)
+            sender = new SumoHttpSender();
+
+        sender.setRetryInterval(retryInterval);
+        sender.setConnectionTimeout(connectionTimeout);
+        sender.setSocketTimeout(socketTimeout);
+        sender.setUrl(url);
+        sender.setSourceHost(sourceHost);
+        sender.setSourceName(sourceName);
+        sender.setSourceCategory(sourceCategory);
+        sender.setProxySettings(new ProxySettings(
+                proxyHost,
+                proxyPort,
+                proxyAuth,
+                proxyUser,
+                proxyPassword,
+                proxyDomain));
+        sender.setClientHeaderValue(CLIENT_NAME);
+        sender.init();
+
+        /* Initialize flusher  */
+        if (flusher != null)
+            flusher.stop();
+
+        flusher = new SumoBufferFlusher(flushingAccuracy,
+                messagesPerRequest,
+                maxFlushInterval,
+                sender,
+                queue,
+                flushAllBeforeStopping);
+        flusher.start();
     }
 
     @Override
@@ -288,11 +296,15 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
         super.stop();
         logger.debug("Closing SumoLogicAppender: " + getName());
         try {
-            flusher.stop();
-            flusher = null;
+            if (flusher != null) {
+                flusher.stop();
+                flusher = null;
+            }
 
-            sender.close();
-            sender = null;
+            if (sender != null) {
+                sender.close();
+                sender = null;
+            }
         } catch (IOException e) {
             logger.error("Unable to close appender", e);
         }
