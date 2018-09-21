@@ -27,8 +27,8 @@ package com.sumologic.logback.server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.status.StatusLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class AggregatingHttpHandler implements HttpHandler {
-    private static final Logger logger = StatusLogger.getLogger();
+    private Logger logger = LoggerFactory.getLogger(getClass());
     private static String REQUEST_ENCODING = "UTF-8";
     private List<MaterializedHttpRequest> exchanges = new ArrayList<MaterializedHttpRequest>();
 

@@ -26,16 +26,18 @@
 
 package com.sumologic.logback;
 
-import com.sumologic.logback.server.AggregatingHttpHandler;
-import com.sumologic.logback.server.MockHttpServer;
+import ch.qos.logback.classic.Logger;
+import com.sumologic.logback.server.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
+
+import static org.junit.Assert.assertEquals;
 
 public class SumoLogicAppenderTest {
 
     private static final int PORT = 10010;
-
     private MockHttpServer server;
     private AggregatingHttpHandler handler;
 
@@ -55,11 +57,50 @@ public class SumoLogicAppenderTest {
 
     @Test
     public void testMessagesWithMetadata() throws Exception {
-
+        // See ./resources/logback.xml for definition
+        Logger loggerInTest = (Logger) LoggerFactory.getLogger("TestAppender1");
+        StringBuffer expected = new StringBuffer();
+        for (int i = 0; i < 100; i ++) {
+            String message = "info" + i;
+            loggerInTest.info(message);
+            expected.append("[main] INFO  TestAppender1 - " + message + "\n");
+        }
+        Thread.sleep(150);
+        // Check headers
+        for(MaterializedHttpRequest request: handler.getExchanges()) {
+            assertEquals(true, request.getHeaders().getFirst("X-Sumo-Name").equals("mySource"));
+            assertEquals(true, request.getHeaders().getFirst("X-Sumo-Category").equals("myCategory"));
+            assertEquals(true, request.getHeaders().getFirst("X-Sumo-Host").equals("myHost"));
+            assertEquals("logback-appender", request.getHeaders().getFirst("X-Sumo-Client"));
+        }
+        // Check body
+        StringBuffer actual = new StringBuffer();
+        for(MaterializedHttpRequest request: handler.getExchanges()) {
+            for (String line : request.getBody().split("\n")) {
+                // Strip timestamp
+                int mainStart = line.indexOf("[main]");
+                String trimmed = line.substring(mainStart);
+                actual.append(trimmed + "\n");
+            }
+        }
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
     public void testMessagesWithoutMetadata() throws Exception {
-
+        // See ./resources/logback.xml for definition
+        Logger loggerInTest = (Logger) LoggerFactory.getLogger("TestAppender2");
+        int numMessages = 5;
+        for (int i = 0; i < numMessages; i ++) {
+            loggerInTest.info("info " + i);
+            Thread.sleep(150);
+        }
+        assertEquals(numMessages, handler.getExchanges().size());
+        for(MaterializedHttpRequest request: handler.getExchanges()) {
+            assertEquals(true, request.getHeaders().getFirst("X-Sumo-Name") == null);
+            assertEquals(true, request.getHeaders().getFirst("X-Sumo-Category") == null);
+            assertEquals(true, request.getHeaders().getFirst("X-Sumo-Host") == null);
+            assertEquals("logback-appender", request.getHeaders().getFirst("X-Sumo-Client"));
+        }
     }
 }

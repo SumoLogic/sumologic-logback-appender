@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss,SSS Z} [%t] %-5p %c - %m%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="TestSumoAppender1" class="com.sumologic.logback.SumoLogicAppender">
+        <encoder>
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss,SSS Z} [%t] %-5p %c - %m%n
+            </Pattern>
+        </encoder>
+        <url>http://localhost:10010</url>
+        <messagesPerRequest>10000</messagesPerRequest>
+        <maxFlushInterval>100</maxFlushInterval>
+        <flushingAccuracy>10</flushingAccuracy>
+        <sourceName>mySource</sourceName>
+        <sourceHost>myHost</sourceHost>
+        <sourceCategory>myCategory</sourceCategory>
+    </appender>
+
+    <appender name="TestSumoAppender2" class="com.sumologic.logback.SumoLogicAppender">
+        <encoder>
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss,SSS Z} [%t] %-5p %c - %m%n
+            </Pattern>
+        </encoder>
+        <url>http://localhost:10010</url>
+        <messagesPerRequest>10000</messagesPerRequest>
+        <maxFlushInterval>100</maxFlushInterval>
+        <flushingAccuracy>10</flushingAccuracy>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root>
+    <Logger name="TestAppender1" level="info">
+        <appender-ref ref="TestSumoAppender1" />
+    </Logger>
+    <Logger name="TestAppender2" level="info">
+        <appender-ref ref="TestSumoAppender2" />
+    </Logger>
+
+</configuration>
