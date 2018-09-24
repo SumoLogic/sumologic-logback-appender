@@ -212,7 +212,6 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
 
     @Override
     public void start() {
-        super.start();
         int errors = 0;
         if (this.encoder == null) {
             this.addStatus(new ErrorStatus("No encoder set for the appender named \"" + this.name + "\".", this));
