@@ -56,14 +56,14 @@ Be sure to replace [collector-url] with the URL after creating an HTTP Hosted Co
 | proxyUser             | No       |               | Proxy host username for basic and NTLM authentication. For no authentication proxy, do not specify.                                        |
 | proxyPassword         | No       |               | Proxy host password for basic and NTLM authentication. For no authentication proxy, do not specify.                                        |
 | proxyDomain           | No       |               | Proxy host domain name for NTLM authentication only                                                                                        |
-| retryInterval         | No       | 10000         | Retry interval (in ms) if a request fails                                                                                                  |
-| connectionTimeout     | No       | 1000          | Timeout (in ms) for connection                                                                                                             |
-| socketTimeout         | No       | 60000         | Timeout (in ms) for a socket                                                                                                               |
+| retryIntervalMs         | No       | 10000         | Retry interval (in ms) if a request fails                                                                                                  |
+| connectionTimeoutMs     | No       | 1000          | Timeout (in ms) for connection                                                                                                             |
+| socketTimeoutMs         | No       | 60000         | Timeout (in ms) for a socket                                                                                                               |
 | messagesPerRequest    | No       | 100           | Number of messages needed to be in the queue before flushing                                                                               |
-| maxFlushInterval      | No       | 10000         | Maximum interval (in ms) between flushes                                                                                                   |
-| flushingAccuracy      | No       | 250           | How often (in ms) that the flushing thread checks the message queue                                                                        |
+| maxFlushIntervalMs      | No       | 10000         | Maximum interval (in ms) between flushes                                                                                                   |
+| flushingAccuracyMs      | No       | 250           | How often (in ms) that the flushing thread checks the message queue                                                                        |
 | maxQueueSizeBytes     | No       | 1000000       | Maximum capacity (in bytes) of the message queue
-| flushAllBeforeStopping| No       | true         | Flush all messages before stopping regardless of flushingAccuracy Be sure to call `loggerContext.stop();` when your application stops.
+| flushAllBeforeStopping| No       | true         | Flush all messages before stopping regardless of flushingAccuracyMs Be sure to call `loggerContext.stop();` when your application stops.
 
 #### Example with Optional Parameters
 
@@ -80,8 +80,8 @@ Be sure to replace [collector-url] with the URL after creating an HTTP Hosted Co
         </encoder>
         <url>[collector-url]</url>
         <messagesPerRequest>10000</messagesPerRequest>
-        <maxFlushInterval>1000</maxFlushInterval>
-        <flushingAccuracy>100</flushingAccuracy>
+        <maxFlushIntervalMs>1000</maxFlushIntervalMs>
+        <flushingAccuracyMs>100</flushingAccuracyMs>
         <sourceName>mySource</sourceName>
         <sourceHost>myHost</sourceHost>
         <sourceCategory>myCategory</sourceCategory>

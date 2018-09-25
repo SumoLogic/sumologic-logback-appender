@@ -60,14 +60,14 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
     private String proxyPassword = null;
     private String proxyDomain = null;
 
-    private int connectionTimeout = 1000;
-    private int socketTimeout = 60000;
-    private int retryInterval = 10000;        // Once a request fails, how often until we retry.
+    private int connectionTimeoutMs = 1000;
+    private int socketTimeoutMs = 60000;
+    private int retryIntervalMs = 10000;        // Once a request fails, how often until we retry.
     private boolean flushAllBeforeStopping = true; // When true, perform a final flush on shutdown
 
     private long messagesPerRequest = 100;    // How many messages need to be in the queue before we flush
-    private long maxFlushInterval = 10000;    // Maximum interval between flushes (ms)
-    private long flushingAccuracy = 250;      // How often the flusher thread looks into the message queue (ms)
+    private long maxFlushIntervalMs = 10000;    // Maximum interval between flushes (ms)
+    private long flushingAccuracyMs = 250;      // How often the flusher thread looks into the message queue (ms)
 
     private String sourceName = null;
     private String sourceHost = null;
@@ -108,10 +108,10 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
         this.messagesPerRequest = messagesPerRequest;
     }
 
-    public long getMaxFlushInterval() { return this.maxFlushInterval; }
+    public long getMaxFlushIntervalMs() { return this.maxFlushIntervalMs; }
 
-    public void setMaxFlushInterval(long maxFlushInterval) {
-        this.maxFlushInterval = maxFlushInterval;
+    public void setMaxFlushIntervalMs(long maxFlushIntervalMs) {
+        this.maxFlushIntervalMs = maxFlushIntervalMs;
     }
 
     public String getSourceName() { return this.sourceName; }
@@ -132,28 +132,28 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
         this.sourceCategory = sourceCategory;
     }
 
-    public long getFlushingAccuracy() { return this.flushingAccuracy; }
+    public long getFlushingAccuracyMs() { return this.flushingAccuracyMs; }
 
-    public void setFlushingAccuracy(long flushingAccuracy) {
-        this.flushingAccuracy = flushingAccuracy;
+    public void setFlushingAccuracyMs(long flushingAccuracyMs) {
+        this.flushingAccuracyMs = flushingAccuracyMs;
     }
 
-    public int getConnectionTimeout() { return this.connectionTimeout; }
+    public int getConnectionTimeoutMs() { return this.connectionTimeoutMs; }
 
-    public void setConnectionTimeout(int connectionTimeout) {
-        this.connectionTimeout = connectionTimeout;
+    public void setConnectionTimeoutMs(int connectionTimeoutMs) {
+        this.connectionTimeoutMs = connectionTimeoutMs;
     }
 
-    public int getSocketTimeout() { return this.socketTimeout; }
+    public int getSocketTimeoutMs() { return this.socketTimeoutMs; }
 
-    public void setSocketTimeout(int socketTimeout) {
-        this.socketTimeout = socketTimeout;
+    public void setSocketTimeoutMs(int socketTimeoutMs) {
+        this.socketTimeoutMs = socketTimeoutMs;
     }
 
-    public int getRetryInterval() { return this.retryInterval; }
+    public int getRetryIntervalMs() { return this.retryIntervalMs; }
 
-    public void setRetryInterval(int retryInterval) {
-        this.retryInterval = retryInterval;
+    public void setRetryIntervalMs(int retryIntervalMs) {
+        this.retryIntervalMs = retryIntervalMs;
     }
 
     public String getProxyHost() {
@@ -250,9 +250,9 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
             sender = new SumoHttpSender();
         }
 
-        sender.setRetryInterval(retryInterval);
-        sender.setConnectionTimeout(connectionTimeout);
-        sender.setSocketTimeout(socketTimeout);
+        sender.setRetryInterval(retryIntervalMs);
+        sender.setConnectionTimeout(connectionTimeoutMs);
+        sender.setSocketTimeout(socketTimeoutMs);
         sender.setUrl(url);
         sender.setSourceHost(sourceHost);
         sender.setSourceName(sourceName);
@@ -272,9 +272,9 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
             flusher.stop();
         }
 
-        flusher = new SumoBufferFlusher(flushingAccuracy,
+        flusher = new SumoBufferFlusher(flushingAccuracyMs,
                 messagesPerRequest,
-                maxFlushInterval,
+                maxFlushIntervalMs,
                 sender,
                 queue,
                 flushAllBeforeStopping);
