@@ -61,11 +61,11 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
     private int connectionTimeout = 1000;
     private int socketTimeout = 60000;
     private int retryInterval = 10000;        // Once a request fails, how often until we retry.
-    private boolean flushAllBeforeStopping = false; // When true, perform a final flush on shutdown
+    private boolean flushAllBeforeStopping = true; // When true, perform a final flush on shutdown
 
     private long messagesPerRequest = 100;    // How many messages need to be in the queue before we flush
     private long maxFlushInterval = 10000;    // Maximum interval between flushes (ms)
-    private long flushingAccuracy = 250;      // How often the flushed thread looks into the message queue (ms)
+    private long flushingAccuracy = 250;      // How often the flusher thread looks into the message queue (ms)
 
     private String sourceName = null;
     private String sourceHost = null;
@@ -281,10 +281,6 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
 
     @Override
     protected void append(E event) {
-        if (!checkEntryConditions()) {
-            logger.warn("Appender not initialized. Dropping log entry");
-            return;
-        }
         try {
             String message = new String(encoder.encode(event), "UTF-8");
             queue.add(message);
@@ -309,9 +305,5 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
         } catch (IOException e) {
             logger.error("Unable to close appender", e);
         }
-    }
-
-    private boolean checkEntryConditions() {
-        return sender != null && sender.isInitialized();
     }
 }

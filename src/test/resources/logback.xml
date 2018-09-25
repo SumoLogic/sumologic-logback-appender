@@ -36,6 +36,17 @@
         <flushingAccuracy>10</flushingAccuracy>
     </appender>
 
+    <appender name="TestSumoAppenderNonUtf8" class="com.sumologic.logback.SumoLogicAppender">
+        <encoder>
+            <Charset>US-ASCII</Charset>
+            <Pattern>%m%n</Pattern>
+        </encoder>
+        <url>http://localhost:10010</url>
+        <messagesPerRequest>10000</messagesPerRequest>
+        <maxFlushInterval>100</maxFlushInterval>
+        <flushingAccuracy>10</flushingAccuracy>
+    </appender>
+
     <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>
@@ -44,6 +55,9 @@
     </Logger>
     <Logger name="TestAppender2" level="info">
         <appender-ref ref="TestSumoAppender2" />
+    </Logger>
+    <Logger name="TestAppenderNonUtf8" level="info">
+        <appender-ref ref="TestSumoAppenderNonUtf8" />
     </Logger>
 
 </configuration>

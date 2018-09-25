@@ -103,4 +103,15 @@ public class SumoLogicAppenderTest {
             assertEquals("logback-appender", request.getHeaders().getFirst("X-Sumo-Client"));
         }
     }
+
+    @Test
+    public void testNonUtf8Charset() throws Exception {
+        // See ./resources/logback.xml for definition
+        Logger loggerInTest = (Logger) LoggerFactory.getLogger("TestAppenderNonUtf8");
+        String message = "Hello 中国的 World";
+        loggerInTest.info(message);
+        Thread.sleep(150);
+        assertEquals(1, handler.getExchanges().size());
+        assertEquals("Hello ??? World\n", handler.getExchanges().get(0).getBody());
+    }
 }
