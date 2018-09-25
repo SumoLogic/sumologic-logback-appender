@@ -26,8 +26,9 @@
 
 package com.sumologic.logback;
 
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import ch.qos.logback.core.encoder.Encoder;
 import ch.qos.logback.core.status.ErrorStatus;
 import com.sumologic.http.aggregation.SumoBufferFlusher;
 import com.sumologic.http.queue.BufferWithEviction;
@@ -39,16 +40,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Logback Appender that sends log messages to Sumo Logic.
  *
  * @author Ryan Miller (rmiller@sumologic.com)
  */
-public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
+public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private Encoder<E> encoder = null;
+    private PatternLayoutEncoder encoder = null;
     private String url = null;
 
     private String proxyHost = null;
@@ -80,11 +82,11 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
 
     // All the parameters exposed to Logback
 
-    public Encoder<E> getEncoder() {
+    public PatternLayoutEncoder getEncoder() {
         return this.encoder;
     }
 
-    public void setEncoder(Encoder<E> encoder) {
+    public void setEncoder(PatternLayoutEncoder encoder) {
         this.encoder = encoder;
     }
 
@@ -280,10 +282,9 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
     }
 
     @Override
-    protected void append(E event) {
+    protected void append(ILoggingEvent event) {
         try {
-            String message = new String(encoder.encode(event), "UTF-8");
-            queue.add(message);
+            queue.add(convertToString(event));
         } catch (Exception e) {
             logger.error("Unable to insert log entry into log queue.", e);
         }
@@ -304,6 +305,14 @@ public class SumoLogicAppender<E> extends UnsynchronizedAppenderBase<E>  {
             }
         } catch (IOException e) {
             logger.error("Unable to close appender", e);
+        }
+    }
+
+    private String convertToString(ILoggingEvent event) {
+        if (encoder.getCharset() == null) {
+            return new String(encoder.encode(event), Charset.defaultCharset());
+        } else {
+            return new String(encoder.encode(event), encoder.getCharset());
         }
     }
 }

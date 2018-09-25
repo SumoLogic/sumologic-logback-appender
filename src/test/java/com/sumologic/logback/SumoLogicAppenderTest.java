@@ -105,13 +105,24 @@ public class SumoLogicAppenderTest {
     }
 
     @Test
-    public void testNonUtf8Charset() throws Exception {
+    public void testAsciiCharset() throws Exception {
         // See ./resources/logback.xml for definition
-        Logger loggerInTest = (Logger) LoggerFactory.getLogger("TestAppenderNonUtf8");
-        String message = "Hello 中国的 World";
+        Logger loggerInTest = (Logger) LoggerFactory.getLogger("TestAppenderAscii");
+        String message = "Hello 中国的\uD801\uDC37 World";
         loggerInTest.info(message);
         Thread.sleep(150);
         assertEquals(1, handler.getExchanges().size());
-        assertEquals("Hello ??? World\n", handler.getExchanges().get(0).getBody());
+        assertEquals("Hello ???? World\n", handler.getExchanges().get(0).getBody());
+    }
+
+    @Test
+    public void testUtf16Charset() throws Exception {
+        // See ./resources/logback.xml for definition
+        Logger loggerInTest = (Logger) LoggerFactory.getLogger("TestAppenderUtf16");
+        String message = "Hello 中国的\uD801\uDC37 World";
+        loggerInTest.info(message);
+        Thread.sleep(150);
+        assertEquals(1, handler.getExchanges().size());
+        assertEquals("Hello 中国的\uD801\uDC37 World\n", handler.getExchanges().get(0).getBody());
     }
 }
