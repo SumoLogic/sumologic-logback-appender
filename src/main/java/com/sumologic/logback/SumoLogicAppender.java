@@ -26,9 +26,9 @@
 
 package com.sumologic.logback;
 
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
+import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import ch.qos.logback.core.status.ErrorStatus;
 import com.sumologic.http.aggregation.SumoBufferFlusher;
 import com.sumologic.http.queue.BufferWithEviction;
@@ -50,7 +50,7 @@ import java.nio.charset.Charset;
 public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private PatternLayoutEncoder encoder = null;
+    private LayoutWrappingEncoder<ILoggingEvent> encoder = null;
     private String url = null;
 
     private String proxyHost = null;
@@ -82,11 +82,11 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 
     // All the parameters exposed to Logback
 
-    public PatternLayoutEncoder getEncoder() {
+    public LayoutWrappingEncoder<ILoggingEvent> getEncoder() {
         return this.encoder;
     }
 
-    public void setEncoder(PatternLayoutEncoder encoder) {
+    public void setEncoder(LayoutWrappingEncoder<ILoggingEvent> encoder) {
         this.encoder = encoder;
     }
 
