@@ -125,4 +125,16 @@ public class SumoLogicAppenderTest {
         assertEquals(1, handler.getExchanges().size());
         assertEquals("Hello 中国的\uD801\uDC37 World\n", handler.getExchanges().get(0).getBody());
     }
+
+    @Test
+    public void testJsonLayout() throws Exception {
+        // See ./resources/logback.xml for definition
+        Logger loggerInTest = (Logger) LoggerFactory.getLogger("TestAppenderJsonLayout");
+        String message = "Hello World";
+        String expected = "\"message\":\"Hello World\"";
+        loggerInTest.info(message);
+        Thread.sleep(150);
+        assertEquals(1, handler.getExchanges().size());
+        assertEquals(true, handler.getExchanges().get(0).getBody().contains(expected));
+    }
 }
