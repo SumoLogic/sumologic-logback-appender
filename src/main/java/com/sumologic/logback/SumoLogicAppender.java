@@ -250,9 +250,9 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
             sender = new SumoHttpSender();
         }
 
-        sender.setRetryInterval(retryIntervalMs);
-        sender.setConnectionTimeout(connectionTimeoutMs);
-        sender.setSocketTimeout(socketTimeoutMs);
+        sender.setRetryIntervalMs(retryIntervalMs);
+        sender.setConnectionTimeoutMs(connectionTimeoutMs);
+        sender.setSocketTimeoutMs(socketTimeoutMs);
         sender.setUrl(url);
         sender.setSourceHost(sourceHost);
         sender.setSourceName(sourceName);

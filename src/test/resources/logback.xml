@@ -58,6 +58,22 @@
         <flushingAccuracyMs>10</flushingAccuracyMs>
     </appender>
 
+    <appender name="TestSumoAppenderJsonLayout" class="com.sumologic.logback.SumoLogicAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+                <timestampFormat>yyyy-MM-dd'T'HH:mm:ss.SSSX</timestampFormat>
+                <timestampFormatTimezoneId>Etc/UTC</timestampFormatTimezoneId>
+                <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                    <prettyPrint>false</prettyPrint>
+                </jsonFormatter>
+            </layout>
+        </encoder>
+        <url>http://localhost:10010</url>
+        <messagesPerRequest>10000</messagesPerRequest>
+        <maxFlushIntervalMs>100</maxFlushIntervalMs>
+        <flushingAccuracyMs>10</flushingAccuracyMs>
+    </appender>
+
     <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>
@@ -72,6 +88,9 @@
     </Logger>
     <Logger name="TestAppenderUtf16" level="info">
         <appender-ref ref="TestSumoAppenderUtf16" />
+    </Logger>
+    <Logger name="TestAppenderJsonLayout" level="info">
+        <appender-ref ref="TestSumoAppenderJsonLayout" />
     </Logger>
 
 </configuration>
