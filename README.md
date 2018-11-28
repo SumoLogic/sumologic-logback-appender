@@ -14,7 +14,7 @@ The library can be added to your project using Maven Central by adding the follo
 <dependency>
     <groupId>com.sumologic.plugins.logback</groupId>
     <artifactId>sumologic-logback-appender</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
@@ -49,7 +49,7 @@ Be sure to replace [collector-url] with the URL after creating an HTTP Hosted Co
 ### Parameters
 | Parameter             | Required? | Default Value | Description                                                                                                                                |
 |-----------------------|----------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| encoder               | Yes      |               | Encoder to format the log message. This will usually specify a Pattern.                                                                                       |
+| encoder               | Yes      |               | Encoder to format the log message. This will usually specify a Pattern. For JsonLayout example, see [this test appender](https://github.com/SumoLogic/sumologic-logback-appender/blob/master/src/test/resources/logback.xml#L61).                                                                                      |
 | url                   | Yes      |               | HTTP collection endpoint URL                                                                                                               |
 | sourceName            | No       | "Http Input"              | Source name to appear when searching on Sumo Logic by `_sourceName`                                                                                                        |
 | sourceHost            | No       | Client IP Address              | Source host to appear when searching on Sumo Logic by `_sourceHost`                                                                                                         |
@@ -118,7 +118,7 @@ To compile the plugin:
         <dependency>
             <groupId>com.sumologic.plugins.http</groupId>
             <artifactId>sumologic-http-core</artifactId>
-            <version>1.0</version>
+            <version>1.2</version>
         </dependency>
     </dependencies>
 ```
