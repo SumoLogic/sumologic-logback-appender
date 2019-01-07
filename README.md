@@ -14,7 +14,7 @@ The library can be added to your project using Maven Central by adding the follo
 <dependency>
     <groupId>com.sumologic.plugins.logback</groupId>
     <artifactId>sumologic-logback-appender</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 
