@@ -1,3 +1,6 @@
+[![Build Status](https://api.travis-ci.org/SumoLogic/sumologic-logback-appender.svg?branch=master)](https://travis-ci.org/SumoLogic/sumologic-logback-appender)
+[![codecov.io](https://codecov.io/github/SumoLogic/sumologic-logback-appender/coverage.svg?branch=master)](https://codecov.io/github/SumoLogic/sumologic-logback-appender?branch=master)
+
 # sumologic-logback-appender
 
 A Logback appender that sends straight to Sumo Logic.
