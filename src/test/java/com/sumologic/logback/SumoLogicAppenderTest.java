@@ -33,6 +33,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.junit.Assert.assertEquals;
 
 public class SumoLogicAppenderTest {
@@ -133,8 +136,16 @@ public class SumoLogicAppenderTest {
         String message = "Hello World";
         String expected = "\"message\":\"Hello World\"";
         loggerInTest.info(message);
+        // 2nd message to test newline message separation
+        loggerInTest.info(message);
         Thread.sleep(150);
         assertEquals(1, handler.getExchanges().size());
-        assertEquals(true, handler.getExchanges().get(0).getBody().contains(expected));
+        Pattern p = Pattern.compile(expected, Pattern.LITERAL);
+        Matcher m = p.matcher(handler.getExchanges().get(0).getBody());
+        int count = 0;
+        while (m.find()) {
+            count++;
+        }
+        assertEquals(2, count);
     }
 }
