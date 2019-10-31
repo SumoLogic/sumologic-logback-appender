@@ -38,7 +38,7 @@ Be sure to replace [collector-url] with the URL after creating an HTTP Hosted Co
     <appender name="SumoAppender" class="com.sumologic.logback.SumoLogicAppender">
         <encoder>
             <Pattern>
-                %date{ISO8601} [%t] %-5p %c - %m%n
+                %date{ISO8601,UTC} [%t] %-5p %c - %m%n
             </Pattern>
         </encoder>
         <url>[collector-url]</url>
@@ -49,7 +49,7 @@ Be sure to replace [collector-url] with the URL after creating an HTTP Hosted Co
 </configuration>
 ```
 
-**Note:** We recommending starting your encoder pattern with a date and time such as `{ISO8601}` for two reasons:
+**Note:** We recommending starting your encoder pattern with a date and time such as `{ISO8601,UTC}` for two reasons:
 
 1. Having a consistent prefix that starts every message is necessary for multiline boundary detection to learn the message prefix needed to group mutiline messages, such as stack traces.
 2. Sumo only supports [certain time formats](https://help.sumologic.com/03Send-Data/Sources/04Reference-Information-for-Sources/Timestamps%2C-Time-Zones%2C-Time-Ranges%2C-and-Date-Formats), and accidentally using an invalid time format could cause [message time discrepancies](https://help.sumologic.com/03Send-Data/Collector-FAQs/Troubleshooting-time-discrepancies).
