@@ -68,7 +68,7 @@ public class SumoLogicAppenderTest {
             loggerInTest.info(message);
             expected.append("[main] INFO  TestAppender1 - " + message + "\n");
         }
-        Thread.sleep(150);
+        Thread.sleep(300);
         // Check headers
         for(MaterializedHttpRequest request: handler.getExchanges()) {
             assertEquals(true, request.getHeaders().getFirst("X-Sumo-Name").equals("mySource"));
@@ -96,7 +96,7 @@ public class SumoLogicAppenderTest {
         int numMessages = 5;
         for (int i = 0; i < numMessages; i ++) {
             loggerInTest.info("info " + i);
-            Thread.sleep(150);
+            Thread.sleep(300);
         }
         assertEquals(numMessages, handler.getExchanges().size());
         for(MaterializedHttpRequest request: handler.getExchanges()) {
@@ -113,7 +113,7 @@ public class SumoLogicAppenderTest {
         Logger loggerInTest = (Logger) LoggerFactory.getLogger("TestAppenderAscii");
         String message = "Hello 中国的\uD801\uDC37 World";
         loggerInTest.info(message);
-        Thread.sleep(150);
+        Thread.sleep(300);
         assertEquals(1, handler.getExchanges().size());
         assertEquals("Hello ???? World\n", handler.getExchanges().get(0).getBody());
     }
@@ -124,7 +124,7 @@ public class SumoLogicAppenderTest {
         Logger loggerInTest = (Logger) LoggerFactory.getLogger("TestAppenderUtf16");
         String message = "Hello 中国的\uD801\uDC37 World";
         loggerInTest.info(message);
-        Thread.sleep(150);
+        Thread.sleep(300);
         assertEquals(1, handler.getExchanges().size());
         assertEquals("Hello 中国的\uD801\uDC37 World\n", handler.getExchanges().get(0).getBody());
     }
@@ -138,7 +138,7 @@ public class SumoLogicAppenderTest {
         loggerInTest.info(message);
         // 2nd message to test newline message separation
         loggerInTest.info(message);
-        Thread.sleep(150);
+        Thread.sleep(300);
         assertEquals(1, handler.getExchanges().size());
         Pattern p = Pattern.compile(expected, Pattern.LITERAL);
         Matcher m = p.matcher(handler.getExchanges().get(0).getBody());

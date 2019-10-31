@@ -71,7 +71,7 @@
         </encoder>
         <url>http://localhost:26932</url>
         <messagesPerRequest>10000</messagesPerRequest>
-        <maxFlushIntervalMs>100</maxFlushIntervalMs>
+        <maxFlushIntervalMs>200</maxFlushIntervalMs>
         <flushingAccuracyMs>10</flushingAccuracyMs>
     </appender>
 
