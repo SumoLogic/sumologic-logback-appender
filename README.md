@@ -76,6 +76,7 @@ Be sure to replace [collector-url] with the URL after creating an HTTP Hosted Co
 | flushingAccuracyMs      | No       | 250           | How often (in ms) that the flushing thread checks the message queue                                                                        |
 | maxQueueSizeBytes     | No       | 1000000       | Maximum capacity (in bytes) of the message queue
 | flushAllBeforeStopping| No       | true         | Flush all messages before stopping regardless of flushingAccuracyMs Be sure to call `loggerContext.stop();` when your application stops.
+| retryableHttpCodeRegex| No       | ^5.*         | Regular expression specifying which HTTP error code(s) should be retried during sending. By default, all 5xx error codes will be retried.
 
 #### Example with Optional Parameters
 
