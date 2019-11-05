@@ -75,6 +75,8 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 
     private long maxQueueSizeBytes = 1000000;
 
+    private String retryableHttpCodeRegex = "^5.*";
+
     private SumoHttpSender sender;
     private SumoBufferFlusher flusher;
     volatile private BufferWithEviction<String> queue;
@@ -212,6 +214,14 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
         this.flushAllBeforeStopping = flushAllBeforeStopping;
     }
 
+    public void setRetryableHttpCodeRegex(String retryableHttpCodeRegex) {
+        this.retryableHttpCodeRegex = retryableHttpCodeRegex;
+    }
+
+    public String getRetryableHttpCodeRegex() {
+        return retryableHttpCodeRegex;
+    }
+
     @Override
     public void start() {
         int errors = 0;
@@ -265,6 +275,7 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
                 proxyPassword,
                 proxyDomain));
         sender.setClientHeaderValue(CLIENT_NAME);
+        sender.setRetryableHttpCodeRegex(retryableHttpCodeRegex);
         sender.init();
 
         // Initialize flusher
