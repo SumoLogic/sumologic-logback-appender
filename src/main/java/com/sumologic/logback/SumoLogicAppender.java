@@ -321,7 +321,7 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 
     private String convertToString(ILoggingEvent event) {
         if (encoder.getCharset() == null) {
-            return new String(encoder.encode(event), Charset.defaultCharset());
+            return encoder.getLayout().doLayout(event);
         } else {
             return new String(encoder.encode(event), encoder.getCharset());
         }
