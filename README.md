@@ -5,8 +5,6 @@
 
 A Logback appender that sends straight to Sumo Logic.
 
-For the original Log4j appender, please see https://github.com/SumoLogic/sumo-log4j-appender
-
 For the Log4j2 appender, please see https://github.com/SumoLogic/sumologic-log4j2-appender
 
 ## Installation
@@ -17,7 +15,7 @@ The library can be added to your project using Maven Central by adding the follo
 <dependency>
     <groupId>com.sumologic.plugins.logback</groupId>
     <artifactId>sumologic-logback-appender</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
 </dependency>
 ```
 
@@ -126,7 +124,7 @@ To compile the plugin:
         <dependency>
             <groupId>com.sumologic.plugins.http</groupId>
             <artifactId>sumologic-http-core</artifactId>
-            <version>1.2</version>
+            <version>1.7</version>
         </dependency>
     </dependencies>
 ```
