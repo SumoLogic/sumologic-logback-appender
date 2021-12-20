@@ -65,7 +65,7 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
     private int retryIntervalMs = 10000;        // Once a request fails, how often until we retry.
     private boolean flushAllBeforeStopping = true; // When true, perform a final flush on shutdown
 
-    private long messagesPerRequest = 100;    // How many messages need to be in the queue before we flush
+    private int messagesPerRequest = 100;    // How many messages need to be in the queue before we flush
     private long maxFlushIntervalMs = 10000;    // Maximum interval between flushes (ms)
     private long flushingAccuracyMs = 250;      // How often the flusher thread looks into the message queue (ms)
 
@@ -106,7 +106,7 @@ public class SumoLogicAppender extends UnsynchronizedAppenderBase<ILoggingEvent>
 
     public long getMessagesPerRequest() { return this.messagesPerRequest; }
 
-    public void setMessagesPerRequest(long messagesPerRequest) {
+    public void setMessagesPerRequest(int messagesPerRequest) {
         this.messagesPerRequest = messagesPerRequest;
     }
 
